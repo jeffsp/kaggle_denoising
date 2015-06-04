@@ -1,2 +1,2 @@
-# kaggle_denoising
+# Kaggle Denoising
 Kaggle Competition: Denoising Dirty Documents
