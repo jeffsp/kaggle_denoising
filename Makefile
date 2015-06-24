@@ -1,0 +1,2 @@
+default:
+	./train.py
