@@ -1,8 +1,8 @@
 .PHONY: train
 
-default: measure
+default: denoise measure
 
-all: denoise measure
+all: train denoise measure
 
 train:
 	./train.py

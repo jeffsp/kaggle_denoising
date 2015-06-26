@@ -4,3 +4,4 @@ train/
 train_cleaned/
 train_denoised/
 zips/
+*.pyc
