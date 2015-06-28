@@ -3,20 +3,20 @@ BUILD=DEBUG
 waf:
 	waf
 
-run: lut denoise convert
+all: lut denoise convert
 
 file_lists:
-	find train/*.pgm | sort > train.txt
-	find train_cleaned/*.pgm | sort > train_cleaned.txt
+	find ../input/*.pgm | sort > input.txt
+	find ../input_cleaned/*.pgm | sort > input_cleaned.txt
 
 lut: waf file_lists
-	paste train_cleaned.txt train.txt | ./build/$(BUILD)/mklut > denoise.lut
+	paste input_cleaned.txt input.txt | ./build/$(BUILD)/mklut > denoise.lut
 
 denoise: waf
-	ls train/*.pgm | xargs -I{} basename {} .pgm | \
-	xargs -I {} sh -c "./build/$(BUILD)/denoise denoise.lut < train/{}.pgm > train_denoised/{}.pgm"
+	ls ../input/*.pgm | xargs -I{} basename {} .pgm | \
+	xargs -P 2 -I {} sh -c "./build/$(BUILD)/denoise denoise.lut < ../input/{}.pgm > ../input_denoised/{}.pgm"
 
-# convert up to parent directory
+# convert up to png
 convert:
-	ls train_denoised/*.pgm | xargs -I{} basename {} .pgm | \
-	xargs -I {} sh -c "convert train_denoised/{}.pgm ../train_denoised/{}.png"
+	ls ../input_denoised/*.pgm | xargs -I{} basename {} .pgm | \
+	xargs -I {} sh -c "convert ../input_denoised/{}.pgm ../input_denoised/{}.png"

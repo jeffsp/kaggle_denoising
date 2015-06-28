@@ -12,7 +12,8 @@
 namespace denoise
 {
 
-const size_t PASSES = 3;
+// const size_t PASSES = 3;
+const size_t PASSES = 4;
 
 typedef jack_rabbit::raster<unsigned char> image_t;
 typedef std::vector<image_t> images_t;

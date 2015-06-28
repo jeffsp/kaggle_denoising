@@ -8,14 +8,14 @@ def ground_truth_fns():
     """
     Return list of ground truth filenames
     """
-    return sorted(glob.glob('train_cleaned/*.png'))
+    return sorted(glob.glob('input_cleaned/*.png'))
 
 
 def noisy_fns():
     """
     Return list of noisy filenames
     """
-    return sorted(glob.glob('train/*.png'))
+    return sorted(glob.glob('input/*.png'))
 
 
 def test_fns():
@@ -40,7 +40,7 @@ def denoised_fns():
     the ground truth filenames.
     """
     fns = ground_truth_fns()
-    fns = [fn.replace('train_cleaned', 'train_denoised') for fn in fns]
+    fns = [fn.replace('input_cleaned', 'input_denoised') for fn in fns]
     return sorted(fns)
 
 
@@ -81,5 +81,5 @@ def grayscale_to_csv(filename, img):
             value = img[i, j]
             assert value[0] == value[1]
             assert value[0] == value[2]
-            csv += '%s_%s_%s,%s\n' % (filename, i, j, value[0])
+            csv += '%s_%s_%s,%s\n' % (filename, i, j, value[0] / 255.0)
     return csv

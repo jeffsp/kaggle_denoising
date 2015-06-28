@@ -1,8 +1,10 @@
+rcm_denoising/input.txt
+rcm_denoising/input_cleaned.txt
 sampleSubmission.csv
 test/
 test_denoised/
 train/
 train_cleaned/
 train_denoised/
-zips/
 *.pyc
+zips/
