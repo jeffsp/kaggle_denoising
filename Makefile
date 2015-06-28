@@ -15,3 +15,8 @@ measure:
 
 clean:
 	rm -f *.pyc
+
+submit:
+	./submit.py
+	echo 'id, value' > submission.txt
+	cat test_denoised/*.csv >> submission.txt

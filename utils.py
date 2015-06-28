@@ -18,6 +18,20 @@ def noisy_fns():
     return sorted(glob.glob('train/*.png'))
 
 
+def test_fns():
+    """
+    Return list of the test filenames -- the ones for submission
+    """
+    return sorted(glob.glob('test/*.png'))
+
+
+def test_denoised_fns():
+    """
+    Return list of the densoied test filenames.
+    """
+    return sorted(glob.glob('test_denoised/*.png'))
+
+
 def denoised_fns():
     """
     Return list of denoised filenames
@@ -53,3 +67,19 @@ def gen_images(fns1, fns2):
         assert img2.shape == img1.shape
 
         yield(img1, img2)
+
+
+def grayscale_to_csv(filename, img):
+    """
+    Convert a png file to a CSV file
+    """
+
+    csv = ''
+
+    for i in range(img.shape[0]):
+        for j in range(img.shape[1]):
+            value = img[i, j]
+            assert value[0] == value[1]
+            assert value[0] == value[2]
+            csv += '%s_%s_%s,%s\n' % (filename, i, j, value[0])
+    return csv

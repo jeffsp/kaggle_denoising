@@ -1,5 +1,6 @@
 sampleSubmission.csv
 test/
+test_denoised/
 train/
 train_cleaned/
 train_denoised/
