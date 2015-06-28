@@ -1,0 +1,26 @@
+.\" Process this file with
+.\" groff -man -Tascii reduce.1
+.\"
+.TH RMS 1 "Februrary 2009" Linux "User Manuals"
+.SH NAME
+rms \- Compute rms contrast across an image
+.SH SYNOPSIS
+.B rms [-h,--help] [-v,--verbose] [-w#,--wsize=#] [FN]
+.SH DESCRIPTION
+Compute rms contrast across an image
+
+If no file is specified, the image will be read from
+standard input.
+
+A spatial weighting function is used at each pixel when
+computing the contrast.
+
+.SH OPTIONS
+.IP	-h,--help
+Print help message
+.IP -v,--verbose
+Be verbose
+.IP	-w#,--wsize=#
+Weighting function size (default=32)
+.SH AUTHOR
+Jeff Perry <jsp@mail.utexas.edu>

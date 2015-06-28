@@ -1,0 +1,5 @@
+.lock-waf_darwin_build
+build/
+denoise.lut
+train.txt
+train_cleaned.txt
