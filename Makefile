@@ -17,6 +17,8 @@ clean:
 	rm -f *.pyc
 
 submit:
+	rm test_denoised/*
+	$(MAKE) -C ./rcm_denoising submit
 	./submit.py
-	echo 'id, value' > submission.txt
-	cat test_denoised/*.csv >> submission.txt
+	echo 'id, value' > submission.csv
+	cat test_denoised/*.csv >> submission.csv

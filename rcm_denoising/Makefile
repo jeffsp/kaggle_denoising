@@ -20,3 +20,10 @@ denoise: waf
 convert:
 	ls ../input_denoised/*.pgm | xargs -I{} basename {} .pgm | \
 	xargs -I {} sh -c "convert ../input_denoised/{}.pgm ../input_denoised/{}.png"
+
+# denoise and convert the test set
+submit: lut
+	ls ../test/*.pgm | xargs -I{} basename {} .pgm | \
+	xargs -P 1 -I {} sh -c "./build/$(BUILD)/denoise denoise.lut < ../test/{}.pgm > ../test_denoised/{}.pgm"
+	ls ../test_denoised/*.pgm | xargs -I{} basename {} .pgm | \
+	xargs -I {} sh -c "convert ../test_denoised/{}.pgm ../test_denoised/{}.png"
