@@ -3,7 +3,7 @@ BUILD=DEBUG
 waf:
 	waf
 
-run: lut denoise
+run: lut denoise convert
 
 file_lists:
 	find train/*.pgm | sort > train.txt
