@@ -8,3 +8,4 @@ train_cleaned/
 train_denoised/
 *.pyc
 zips/
+submission*.csv
