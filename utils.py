@@ -76,10 +76,10 @@ def grayscale_to_csv(filename, img):
 
     csv = ''
 
-    for i in range(img.shape[0]):
-        for j in range(img.shape[1]):
+    for j in range(img.shape[1]):
+        for i in range(img.shape[0]):
             value = img[i, j]
             assert value[0] == value[1]
             assert value[0] == value[2]
-            csv += '%s_%s_%s,%s\n' % (filename, i, j, value[0] / 255.0)
+            csv += '%s_%s_%s,%s\n' % (filename, i+1, j+1, value[0] / 255.0)
     return csv
