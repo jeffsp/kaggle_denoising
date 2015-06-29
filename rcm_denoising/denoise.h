@@ -7,7 +7,110 @@
 #ifndef DENOISE_H
 #define DENOISE_H
 
-#include "opp.h"
+#include "horny_toad.h"
+#include "jack_rabbit.h"
+#include <fstream>
+
+namespace opp
+{
+    size_t index888 (unsigned a, unsigned b, unsigned c)
+    {
+        return (a << 16) + (b << 8) + c;
+    }
+
+    /// @brief single moment lookup table
+    ///
+    /// @tparam T value type of whatever lut is summing
+    template<typename T=size_t>
+    class lut1
+    {
+        public:
+        lut1 (size_t SZ = 0)
+            : totals (SZ)
+            , sums (SZ)
+        { }
+        size_t size () const
+        {
+            return totals.size ();
+        }
+        void resize (size_t n)
+        {
+            totals.resize (n);
+            sums.resize (n);
+        }
+        void update (size_t i, T x)
+        {
+            assert (i < totals.size ());
+            assert (i < sums.size ());
+#pragma omp atomic
+            ++totals[i];
+#pragma omp atomic
+            sums[i] += x;
+        }
+        void update (size_t i, T x, T count)
+        {
+            assert (i < totals.size ());
+            assert (i < sums.size ());
+#pragma omp atomic
+            totals[i] += count;
+#pragma omp atomic
+            sums[i] += x * count;
+        }
+        T sum (size_t i) const
+        {
+            assert (i < sums.size ());
+            return sums[i];
+        }
+        size_t total (size_t i) const
+        {
+            assert (i < totals.size ());
+            return totals[i];
+        }
+        std::ostream& write (std::ostream &s) const
+        {
+            // not portable
+            s.write (reinterpret_cast<const char *> (&totals[0]), totals.size () * sizeof (size_t));
+            s.write (reinterpret_cast<const char *> (&sums[0]), sums.size () * sizeof (T));
+            return s;
+        }
+        std::istream& read (std::istream &s)
+        {
+            // not portable
+            s.read (reinterpret_cast<char *> (&totals[0]), totals.size () * sizeof (size_t));
+            s.read (reinterpret_cast<char *> (&sums[0]), sums.size () * sizeof (T));
+            return s;
+        }
+        private:
+        std::vector<size_t> totals;
+        std::vector<T> sums;
+    };
+
+    /// @brief helper I/O function for lut1<T>
+    ///
+    /// @tparam T
+    /// @param s stream
+    /// @param l lut
+    ///
+    /// @return istream
+    template<typename T>
+    std::istream& operator>> (std::istream &s, lut1<T> &l)
+    {
+        return l.read (s);
+    }
+
+    /// @brief helper I/O function for lut1<T>
+    ///
+    /// @tparam T
+    /// @param s stream
+    /// @param l lut
+    ///
+    /// @return ostream
+    template<typename T>
+    std::ostream& operator<< (std::ostream &s, const lut1<T> &l)
+    {
+        return l.write (s);
+    }
+};
 
 namespace denoise
 {

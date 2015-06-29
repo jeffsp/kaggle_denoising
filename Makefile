@@ -16,9 +16,12 @@ measure:
 clean:
 	rm -f *.pyc
 
-submit:
+submit: rcm_all
 	rm test_denoised/*
 	$(MAKE) -C ./rcm_denoising submit
 	./submit.py
 	echo 'id,value' > submission.csv
 	cat test_denoised/*.csv >> submission.csv
+
+rcm_all:
+	$(MAKE) -C ./rcm_denoising all
