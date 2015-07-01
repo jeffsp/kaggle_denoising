@@ -13,6 +13,49 @@
 
 namespace opp
 {
+    /// @brief gaussian blur and rescale an image
+    ///
+    /// @tparam T image type
+    /// @param p image
+    /// @param kernel size of kernel in pixels
+    /// @param stddev standard deviation of gaussian kernel
+    /// @param scale downsampling scale
+    ///
+    /// @return the blurred and rescaled image
+    template<typename T>
+    T gaussian_blur (const T &p, size_t kernel, double stddev, size_t scale)
+    {
+        const size_t ROWS = p.rows () / scale;
+        const size_t COLS = p.cols () / scale;
+        T q (ROWS, COLS);
+        // create gaussian kernel
+        jack_rabbit::raster<double> g (kernel, kernel, 1.0);
+        jack_rabbit::subscript_unary_function<double,horny_toad::gaussian_window> f (g.rows (), g.cols ());
+        f.stddev (stddev);
+        std::transform (g.begin (), g.end (), g.begin (), f);
+        //horny_toad::print2d (std::clog, g);
+        // note that you can't divide by 1/(2*pi*stddev^2) because the tails are
+        // clipped, and the kernel therefore won't sum to 1.0
+        double sum = accumulate (g.begin (), g.end (), 0.0);
+        for (size_t i = 0; i < g.size (); ++i)
+            g[i] /= sum;
+        // blur and downsample at each point
+        for (size_t i = 0; i < ROWS; ++i)
+        {
+            unsigned i2 = i * scale;
+            for (size_t j = 0; j < COLS; ++j)
+            {
+                unsigned j2 = j * scale;
+                assert (i < q.rows ());
+                assert (j < q.cols ());
+                assert (i2 < p.rows ());
+                assert (j2 < p.cols ());
+                q (i, j) = horny_toad::mirrored_dot_product (g, p, i2 - (kernel - 1) / 2, j2 - (kernel - 1) / 2);
+            }
+        }
+        return q;
+    }
+
     size_t index888 (unsigned a, unsigned b, unsigned c)
     {
         return (a << 16) + (b << 8) + c;
@@ -172,6 +215,24 @@ class context
     }
 };
 
+template<typename T>
+const T rescale (const T &p, const double scale)
+{
+    T q (p);
+    for (size_t i = 0; i < p.rows (); ++i)
+    {
+        for (size_t j = 0; j < p.cols (); ++j)
+        {
+            const int p0 = p (i, j);
+            int scaled = round (p0 * scale);
+            if (scaled > 255)
+                scaled = 255;
+            q (i, j) = scaled;
+        }
+    }
+    return q;
+}
+
 template<typename C>
 class codec
 {
@@ -183,6 +244,14 @@ class codec
     {
     }
     void update (const image_t &p, const image_t &q, const bool h)
+    {
+        update2 (p, q, h);
+        if (h)
+            update2 (horny_toad::fliplr (p), horny_toad::fliplr (q), h);
+        else
+            update2 (horny_toad::flipud (p), horny_toad::flipud (q), h);
+    }
+    void update2 (const image_t &p, const image_t &q, const bool h)
     {
         const size_t K = C::kernel_size ();
         if (h)
