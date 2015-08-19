@@ -1,0 +1,366 @@
+<ui version="4.0" >
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>621</width>
+    <height>472</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget" >
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>28</y>
+     <width>621</width>
+     <height>419</height>
+    </rect>
+   </property>
+   <layout class="QGridLayout" name="gridLayout" >
+    <item row="0" column="0" >
+     <widget class="jack_rabbit::FoveateView" name="graphicsView" >
+      <property name="minimumSize" >
+       <size>
+        <width>32</width>
+        <height>32</height>
+       </size>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar" >
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>621</width>
+     <height>28</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu_File" >
+    <property name="tearOffEnabled" >
+     <bool>true</bool>
+    </property>
+    <property name="title" >
+     <string>&amp;File</string>
+    </property>
+    <addaction name="action_Open" />
+    <addaction name="action_Open_Image_Sequence" />
+    <addaction name="action_Open_Blending_Map" />
+    <addaction name="action_Save" />
+    <addaction name="separator" />
+    <addaction name="action_Export_Blending_Map" />
+    <addaction name="separator" />
+    <addaction name="action_Quit" />
+   </widget>
+   <widget class="QMenu" name="menu_Options" >
+    <property name="tearOffEnabled" >
+     <bool>true</bool>
+    </property>
+    <property name="title" >
+     <string>&amp;Options</string>
+    </property>
+    <widget class="QMenu" name="menu_Foveation_Mode" >
+     <property name="title" >
+      <string>Foveation &amp;Mode</string>
+     </property>
+     <addaction name="action_Foveation_Mode_Function" />
+     <addaction name="action_Foveation_Mode_Bitmap" />
+     <addaction name="action_Foveation_Mode_Off" />
+    </widget>
+    <widget class="QMenu" name="menu_Wheel_Mode" >
+     <property name="title" >
+      <string>&amp;Wheel Mode</string>
+     </property>
+     <addaction name="action_Wheel_Mode_Falloff" />
+     <addaction name="action_Wheel_Mode_Off" />
+    </widget>
+    <widget class="QMenu" name="menu_Fixation_Mode" >
+     <property name="title" >
+      <string>Fi&amp;xation Mode</string>
+     </property>
+     <addaction name="action_Fixation_Mode_Continuous" />
+     <addaction name="action_Fixation_Mode_Single" />
+    </widget>
+    <widget class="QMenu" name="menu_Foveated_Channels" >
+     <property name="title" >
+      <string>Foveated Cha&amp;nnels</string>
+     </property>
+     <addaction name="action_Luminance_Channel" />
+     <addaction name="action_Color_Channel" />
+    </widget>
+    <addaction name="menu_Fixation_Mode" />
+    <addaction name="menu_Foveation_Mode" />
+    <addaction name="menu_Foveated_Channels" />
+    <addaction name="menu_Wheel_Mode" />
+   </widget>
+   <widget class="QMenu" name="menu_View" >
+    <property name="tearOffEnabled" >
+     <bool>true</bool>
+    </property>
+    <property name="title" >
+     <string>&amp;View</string>
+    </property>
+    <addaction name="action_Fullscreen" />
+    <addaction name="action_Menubar" />
+    <addaction name="action_Statusbar" />
+    <addaction name="action_Background_Color" />
+    <addaction name="action_Scale" />
+   </widget>
+   <widget class="QMenu" name="menu_Help" >
+    <property name="title" >
+     <string>&amp;Help</string>
+    </property>
+    <addaction name="action_Foveate_Help" />
+    <addaction name="action_About" />
+   </widget>
+   <addaction name="menu_File" />
+   <addaction name="menu_Options" />
+   <addaction name="menu_View" />
+   <addaction name="menu_Help" />
+  </widget>
+  <widget class="QStatusBar" name="statusbar" >
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>447</y>
+     <width>621</width>
+     <height>25</height>
+    </rect>
+   </property>
+  </widget>
+  <action name="action_Open" >
+   <property name="text" >
+    <string>&amp;Open Image</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="action_Quit" >
+   <property name="text" >
+    <string>&amp;Quit</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+Q</string>
+   </property>
+  </action>
+  <action name="action_Foveation_Mode_Off" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>&amp;Off</string>
+   </property>
+   <property name="toolTip" >
+    <string>No foveation</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+Shift+X</string>
+   </property>
+  </action>
+  <action name="action_Fullscreen" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>&amp;Fullscreen</string>
+   </property>
+   <property name="shortcut" >
+    <string>F11</string>
+   </property>
+  </action>
+  <action name="action_Save" >
+   <property name="text" >
+    <string>&amp;Save As</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="action_Wheel_Mode_Falloff" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>&amp;Falloff</string>
+   </property>
+  </action>
+  <action name="action_Wheel_Mode_Off" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>&amp;Off</string>
+   </property>
+  </action>
+  <action name="action_Foveation_Mode_Bitmap" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>Ble&amp;nding Bitmap</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+Shift+N</string>
+   </property>
+  </action>
+  <action name="action_Foveation_Mode_Function" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>&amp;Half Resolution Function</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+Shift+H</string>
+   </property>
+  </action>
+  <action name="action_Fixation_Mode_Continuous" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>&amp;Continuous</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+Shift+C</string>
+   </property>
+  </action>
+  <action name="action_Fixation_Mode_Single" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>&amp;Single</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+Shift+S</string>
+   </property>
+  </action>
+  <action name="action_Statusbar" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="checked" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>S&amp;tatus Bar</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+Shift+T</string>
+   </property>
+  </action>
+  <action name="action_Background_Color" >
+   <property name="text" >
+    <string>Bac&amp;kground Color</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+Shift+K</string>
+   </property>
+  </action>
+  <action name="action_About" >
+   <property name="text" >
+    <string>&amp;About</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+Shift+A</string>
+   </property>
+  </action>
+  <action name="action_Foveate_Help" >
+   <property name="text" >
+    <string>Foveate &amp;Help</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+Shift+?</string>
+   </property>
+  </action>
+  <action name="action_Scale" >
+   <property name="text" >
+    <string>Image Sca&amp;le</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+Shift+L</string>
+   </property>
+  </action>
+  <action name="action_Luminance_Channel" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="checked" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>Luminance</string>
+   </property>
+  </action>
+  <action name="action_Color_Channel" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="checked" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>Color</string>
+   </property>
+  </action>
+  <action name="action_Menubar" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="checked" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>&amp;Menu Bar</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+Shift+M</string>
+   </property>
+   <property name="shortcutContext" >
+    <enum>Qt::ApplicationShortcut</enum>
+   </property>
+  </action>
+  <action name="action_Open_Blending_Map" >
+   <property name="text" >
+    <string>Open &amp;Blending Map</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+Shift+B</string>
+   </property>
+  </action>
+  <action name="action_Export_Blending_Map" >
+   <property name="text" >
+    <string>&amp;Export Blending Map</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+Shift+E</string>
+   </property>
+  </action>
+  <action name="action_Open_Image_Sequence" >
+   <property name="text" >
+    <string>Open Image &amp;Sequence</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+Shift+D</string>
+   </property>
+  </action>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>jack_rabbit::FoveateView</class>
+   <extends>QGraphicsView</extends>
+   <header>foveate_view.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

@@ -1,0 +1,56 @@
+.\" Process this file with
+.\" groff -man -Tascii reduce.1
+.\"
+.TH REDUCE 1 "August 2008" Linux "User Manuals"
+.SH NAME
+reduce \- Reduce/expand an image
+.SH SYNOPSIS
+.B reduce [-h,--help] [-k#,--kernel=#] [-x#,--expand_levels=#] [-i#,--input_level=#] [-l#,--output_level=#] [FN]
+.SH DESCRIPTION
+Reduce and optionally expand a PGM image.
+
+If no file is specified, image will come from standard
+input.
+
+The output file is printed to standard output in PGM format.
+.SH OPTIONS
+.IP	-h,--help
+Print help message
+.IP	-k#,--kernel=#
+Kernel size (2,3,4)[3]
+
+The kernel parameter indicates the kernel used for reduction and
+also determines the type of interpolation used when
+expanding.
+
+A kernel parameter of
+.B 2
+will use a 2x2 kernel.
+
+A kernel parameter of
+.B 3
+will use a 3x3 kernel.
+
+A kernel parameter of
+.B 4
+will use a 2x2 kernel and apply blurring during upsampling
+and interpolation.
+.IP	-i#,--input_level=#
+Specify the level of the pyramid into which the image will
+be read.
+.IP	-x#,--expand_levels=#
+Expand levels (1-n)[0]
+
+Expand
+.B #
+levels to the level indicated by the output level parameter.
+For example, an output level of 1 with 2 expand levels will
+reduce the image from level 0 to level 3 and then expand the
+image at level 3 to level 2 and then to level 1.  Level 1
+will then be output.
+.IP	-l#,--output_level=#
+Output level (1-n)[1]
+
+The final level of the pyramid to output.
+.SH AUTHOR
+Jeff Perry <jsp@mail.utexas.edu>
