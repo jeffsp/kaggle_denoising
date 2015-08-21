@@ -1,0 +1,99 @@
+import numpy as np
+
+def gen_reg_mats(nbrs, grnd_truth):
+	"""
+	Purpose: 	Generate matrices A and B to solve for the linear weights to predict pixel values from
+				the values in a patch of pixels (i.e., Ax + B = 0)
+	Input: 	nbrs: a k x n array of neighbors, k is the number of patches, n is the number of neighbors
+			grnd_truth: a k x 1 array of ground truth pixel values
+	Output: A: an m x m matrix where m is the number of neigbors times the number of possible values
+			of those neighbors
+			B: an m x 1 matrix
+			lvl_dict: a dictionary indexing the intensity levels
+	"""
+	n_nbrs = float(nbrs.shape[1])				#Get the number of neighbors (n_nbrs)
+	cent = np.ceil(n_nbrs / 2.0)				#Get the center pixel for the patch
+	obs_cent_px = nbrs[:, cent]					#Get the observation at the center pixel
+	delta_Y_true = grnd_truth - obs_cent_px		#Get the change in intensity between the observation and ground truth
+	delta_Y_obs = nbrs - \
+	obs_cent_px.reshape(obs_cent_px.size, 1)	#Get the relative intensity of the neigbors
+	delta_Y_lvls = np.unique(delta_Y_obs)		#Get the unique intensity values
+	lvl_dict = {x: idx for idx, x \
+	in enumerate(delta_Y_lvls)}					#Dictionary of indicies and levels
+	n_lvls = np.size(delta_Y_lvls)				#Get the number of intensity values
+	m = n_lvls * n_nbrs							#Get the size of each dimenstion of the matrix
+	A = np.zeros((m,m))							#Assign an empty A matrix
+	B = np.zeros((m))							#Assign an empty B matrix
+
+	for idx, k in enumerate(delta_Y_obs):
+			delta_Y_k = delta_Y_true[idx] 
+			for i, delta_Y_ik  in enumerate(k):
+				j_idx = lvl_dict[delta_Y_ik]
+				B_idx = i * n_lvls + j_idx 
+				B[B_idx] = B[B_idx] + delta_Y_k * delta_Y_ik
+				
+				for l, delta_Y_lk in enumerate(k):
+					q_idx = lvl_dict[delta_Y_lk] 
+					A_idx = l * n_lvls + q_idx
+					A[B_idx, A_idx] = A[B_idx, A_idx] + delta_Y_ik * delta_Y_lk
+
+	return A, B, lvl_dict
+
+def calc_weights(A, B):
+	"""
+	Purpose: 	Calculate the weights that represent the solution to a system of linear equations
+	Inputs:		A: an m x m matrix of coefficients
+				B: an m x 1 matrix of observations
+	Outputs:	a 1 x m matrix of weights
+	"""
+	return np.linalg.solve(A, B)
+
+def lin_reg(nbrs, grnd_truth):
+	"""
+	Purpose: 	Do a linear regression
+	Input: 		nbrs: a k x n array of neighbors, k is the number of patches, n is the number of neighbors
+				grnd_truth: a k x 1 array of ground truth pixel values
+	Outputs:	a 1 x n array of weights
+	"""
+	return np.linalg.lstsq(nbrs, grnd_truth)[0]
+
+def predict_val(obs, w):
+	"""
+	Purpose: 	Predict a value given the observations
+	Input:		obs: a nxm array of neighbors
+				w:	a 1xm array of weights
+	Output: 	predicted values 
+	"""
+	return np.dot(obs, w)
+
+def predict_px_nbrs(nbrs, w, lvl_dict):
+	"""
+	Purpose: 	Predict a pixel value given the neighboring values
+	Input:		nbrs: a 1xn array of neighbors
+				w:	a 1xm array of weights, where m is product the number of neighbors and the number of intensities
+				lvl_dict: a dictionary containing the index values for each intensity level
+	Output: 	a predicted value for the pixel
+	"""
+	n_nbrs = float(nbrs.shape[1])				#Get the number of neighbors (n_nbrs)
+	cent = np.ceil(n_nbrs / 2.0)				#Get the center pixel for the patch
+	obs_cent_px = nbrs[cent]					#Get the observation at the center pixel
+	delta_Y_obs = nbrs - obs_cent_px			#Get the relative intensity of the neigbors
+	delta_pred = 0.0							#Set a zero prediction for the intensity difference of the pixel
+	for i, nbr in enumerate(delta_Y_obs):
+		j_idx = lvl_dict[nbr]
+		w_idx = i * n_lvls + j_idx 
+		this_w = w[w_idx]
+		delta_pred = delta_pred + this_w * nbr
+
+	return delta_pred + obs_cent_px
+
+def calc_mse(pred, grnd_truth):
+	"""
+	Purpose: 	Calculate mean squared error
+	Input:		pred: a kx1 array of predicted values
+				grnd_truth: a k x 1 array of ground truth pixel values
+	Output: 	Mean squared error of the prediction
+	"""
+	err = pred - grnd_truth
+	sq_err = err ** 2
+	return np.sum(sq_err) / float(sq_err.size)
